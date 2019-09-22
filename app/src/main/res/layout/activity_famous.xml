@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/AreaName"
+        android:layout_alignParentTop="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/AreaName"
+        android:id="@+id/famousButton"
+        android:layout_alignParentLeft="true"
+        android:text="랜덤메뉴"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_backgound"
+        android:textColor="#FFFFFF"/>
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/meterSelector"
+        android:layout_below="@+id/AreaName"
+        android:layout_toLeftOf="@+id/GPSButton">
+
+    </Spinner>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/AreaName"
+        android:id="@+id/GPSButton"
+        android:layout_alignParentRight="true"
+        android:text="내위치로"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_backgound"
+        android:textColor="#FFFFFF"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/famousButton">
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listView"
+        android:layout_weight="1"
+        android:dividerHeight="5dp"
+        >
+    </ListView>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fRandom"
+            android:text="랜덤"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_backgound"
+            android:textColor="#FFFFFF"/>
+    </LinearLayout>
+
+</RelativeLayout>
