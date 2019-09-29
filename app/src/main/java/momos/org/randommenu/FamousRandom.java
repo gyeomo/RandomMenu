@@ -54,6 +54,7 @@ public class FamousRandom extends AppCompatActivity {
     ListViewAdapter adapter;
     SimpleAdapter simpleAdapter;
     Random random;
+    boolean gpsFlag = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,37 +169,42 @@ public class FamousRandom extends AppCompatActivity {
                 }
                 else {
                     //latitude , longitude 들어가야함. 서울이나 도시에서 넣을것.
-                    String subString[] = findGedAddress(getBaseContext(), latitude, longitude).split(" ");
-                    AreaString = subString[1] + " " + subString[2] + " " + subString[3];
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // TODO Auto-generated method stub
-                            try {
-                                NaverAPIFunc naverAPIFunc = new NaverAPIFunc(getBaseContext(), true);
-                                naverAPIFunc.SetPosition(37.484203, 126.929674);
-                                naverAPIFunc.SetRegion(meter);
-                               // text = naverAPIFunc.ParserFunc(AreaString);
-                                //arrayList = naverAPIFunc.ParserFunc(AreaString);
-                                hashArray = naverAPIFunc.ParserFunc(AreaString);
-                            } catch (SecurityException ex) {
-                                makeText(getBaseContext(), "오류" + ex, Toast.LENGTH_SHORT).show();
-                            }
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
+                    if(gpsFlag) {
+                        String subString[] = findGedAddress(getBaseContext(), latitude, longitude).split(" ");
+                        AreaString = subString[1] + " " + subString[2] + " " + subString[3];
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // TODO Auto-generated method stub
+                                try {
+                                    NaverAPIFunc naverAPIFunc = new NaverAPIFunc(getBaseContext(), true);
+                                    naverAPIFunc.SetPosition(latitude, longitude);
+                                    naverAPIFunc.SetRegion(meter);
+                                    // text = naverAPIFunc.ParserFunc(AreaString);
+                                    //arrayList = naverAPIFunc.ParserFunc(AreaString);
+                                    hashArray = naverAPIFunc.ParserFunc(AreaString);
+                                } catch (SecurityException ex) {
+                                    makeText(getBaseContext(), "오류" + ex, Toast.LENGTH_SHORT).show();
+                                }
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
                                    /* adapter.clearItem();
                                     for(int i = 0; i<arrayList.size();i++){
                                         adapter.addItem(arrayList.get(i),"","");
                                     }*/
-                                 //   famousText.setText(text);
-                                    //makeText(getBaseContext(),longitude + "   "+latitude, Toast.LENGTH_SHORT).show();
-                                    simpleAdapter = new SimpleAdapter(getBaseContext(), hashArray, android.R.layout.simple_list_item_2, from, to);
-                                    listView.setAdapter(simpleAdapter);
-                                }
-                            });
-                        }
-                    }).start();
+                                        //   famousText.setText(text);
+                                        //makeText(getBaseContext(),longitude + "   "+latitude, Toast.LENGTH_SHORT).show();
+                                        simpleAdapter = new SimpleAdapter(getBaseContext(), hashArray, android.R.layout.simple_list_item_2, from, to);
+                                        listView.setAdapter(simpleAdapter);
+                                    }
+                                });
+                            }
+                        }).start();
+                    }
+                    else{
+                        makeText(getBaseContext(), "GPS가 위치를 잡고 있습니다. 다시 눌러주세요.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -206,7 +212,7 @@ public class FamousRandom extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HashMap<String, String> tempMap=hashArray.get(position);
-                makeText(getBaseContext(), tempMap.get("title"), Toast.LENGTH_SHORT).show();
+                makeText(getBaseContext(), tempMap.get("title"), Toast.LENGTH_LONG).show();
             }
         });
         fRandom = (Button)findViewById(R.id.fRandom);
@@ -216,7 +222,7 @@ public class FamousRandom extends AppCompatActivity {
                 if(hashArray_size > 0) {
                     int ranNum = random.nextInt(hashArray_size);
                     HashMap<String, String> tempMap=hashArray.get(ranNum);
-                    makeText(getBaseContext(), tempMap.get("title"), Toast.LENGTH_SHORT).show();
+                    makeText(getBaseContext(), tempMap.get("title"), Toast.LENGTH_LONG).show();
                 }
                 else
                     makeText(getBaseContext(), "데이터 없음", Toast.LENGTH_SHORT).show();
@@ -242,6 +248,7 @@ public class FamousRandom extends AppCompatActivity {
         public void onLocationChanged(Location location) {
             longitude = location.getLongitude(); //경도
             latitude = location.getLatitude();   //위도
+            gpsFlag = true;
         }
         public void onProviderDisabled(String provider) {
         }
